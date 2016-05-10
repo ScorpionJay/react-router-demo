@@ -52,33 +52,18 @@ const Message = React.createClass({
 	}
 })
 
-
-
-/* routes */
-const routes = {
-	path: '/',
-	component: App,
-	IndexRoute :{component: Dashboard},
-	childRoutes: [
-		{ path: 'about', component: About},
-		{
-			path: 'inbox',
-			component: Inbox,
-			childRoutes : [{
-				path: 'messages/:id',
-				onEnter: ({ params }, replace) => replace(`/messages/${params.id}`)
-			}]
-		},
-		{
-			component: Inbox,
-			childRoutes: [{
-				path: 'messages/:id',component:Message
-			}]
-		}
-	]
-}
-
 // router
-render(
-<Router history={hashHistory} routes={routes} />
-,document.getElementById('content'))
+render((
+	<Router history={hashHistory}>
+		<Route path="/" component={App}>
+			<IndexRoute component={Dashboard} />
+			<Route path="about" component={About} />
+			<Route path="inbox" component={Inbox}>
+				 <Redirect from="messages/:id" to="/messages/:id" />
+			</Route>
+			<Route component={Inbox}>
+				<Route path="messages/:id" component={Message}/>
+			</Route>
+		</Route>
+	</Router>
+),document.getElementById('content'))

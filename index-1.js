@@ -1,6 +1,6 @@
 import React from 'react'
 import { render } from 'react-dom'
-import { Router, IndexRoute ,Route, hashHistory,Link,Redirect } from 'react-router'
+import { Router, Route, hashHistory,Link } from 'react-router'
 
 require('./sass/_main.scss')
 
@@ -18,12 +18,6 @@ const App = React.createClass({
 			</div>
 		);
 	}
-})
-
-const Dashboard = React.createClass({
-  render() {
-    return <div>Welcome to the app!!!</div>
-  }
 })
 
 /* About */
@@ -52,33 +46,14 @@ const Message = React.createClass({
 	}
 })
 
-
-
-/* routes */
-const routes = {
-	path: '/',
-	component: App,
-	IndexRoute :{component: Dashboard},
-	childRoutes: [
-		{ path: 'about', component: About},
-		{
-			path: 'inbox',
-			component: Inbox,
-			childRoutes : [{
-				path: 'messages/:id',
-				onEnter: ({ params }, replace) => replace(`/messages/${params.id}`)
-			}]
-		},
-		{
-			component: Inbox,
-			childRoutes: [{
-				path: 'messages/:id',component:Message
-			}]
-		}
-	]
-}
-
 // router
-render(
-<Router history={hashHistory} routes={routes} />
-,document.getElementById('content'))
+render((
+	<Router>
+		<Route path="/" component={App}>
+			<Route path="about" component={About}/>
+			<Route path="inbox" component={Inbox}>
+				<Route path="messages/:id" component={Message}/>
+			</Route>
+		</Route>
+	</Router>
+),document.getElementById('content'))
